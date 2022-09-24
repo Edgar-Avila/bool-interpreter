@@ -1,4 +1,4 @@
-use crate::token::{Token, TokenType};
+use crate::token::Token;
 use std::str::Chars;
 
 pub struct Lexer<'a> {
@@ -35,37 +35,37 @@ impl<'a> Lexer<'a> {
             match c {
                 ' ' | '\t' | '\n' => self.advance(),
                 '(' => {
-                    tokens.push(Token::new(TokenType::Lparen, None));
+                    tokens.push(Token::Lparen);
                     self.advance();
                 },
                 ')' => {
-                    tokens.push(Token::new(TokenType::RParen, None));
+                    tokens.push(Token::RParen);
                     self.advance();
                 },
                 't' => {
                     let rest = "rue";
                     self.verify(&rest);
                     self.advance();
-                    tokens.push(Token::new(TokenType::Bool, Some(true)));
+                    tokens.push(Token::Bool(true));
                 },
                 'f' => {
                     let rest = "alse";
                     self.verify(&rest);
                     self.advance();
-                    tokens.push(Token::new(TokenType::Bool, Some(false)));
+                    tokens.push(Token::Bool(false));
 
                 },
                 'a' => {
                     let rest = "nd";
                     self.verify(&rest);
                     self.advance();
-                    tokens.push(Token::new(TokenType::And, None));
+                    tokens.push(Token::And);
                 },
                 'o' => {
                     let rest = "r";
                     self.verify(&rest);
                     self.advance();
-                    tokens.push(Token::new(TokenType::Or, None));
+                    tokens.push(Token::Or);
                 }
                 _ => (),
             }

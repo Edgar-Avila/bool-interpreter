@@ -1,7 +1,7 @@
 mod token;
 mod lexer;
 
-use lexer::Lexer;
+use crate::lexer::Lexer;
 
 fn main() {
     let code = String::from("(true or false) and ");
