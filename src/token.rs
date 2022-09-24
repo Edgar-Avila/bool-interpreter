@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 #[derive(Debug)]
 pub enum Token {
     Bool(bool),
@@ -5,4 +7,16 @@ pub enum Token {
     Or,
     Lparen,
     RParen,
+}
+
+impl Display for Token {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Bool(val) => write!(f, "{}", val),
+            Self::And => write!(f, "and"),
+            Self::Or => write!(f, "or"),
+            Self::Lparen => write!(f, "("),
+            Self::RParen => write!(f, ")"),
+        }
+    }
 }
