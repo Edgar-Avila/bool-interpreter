@@ -23,30 +23,27 @@ impl<'a> Parser<'a> {
         self.expr()
     }
     fn expr(&mut self) -> Node {
-        let term = self.term();
-        self.advance();
-        if let Some(token) = self.curr_token {
+        let mut result = self.term();
+        while let Some(token) = self.curr_token {
             match token {
                 Token::Or => {
                     self.advance();
-                    let t2 = self.expr();
-                    return Node::Or {
-                        left: Box::new(term),
-                        right: Box::new(t2),
+                    result = Node::Or {
+                        left: Box::new(result),
+                        right: Box::new(self.term()),
                     };
                 }
                 Token::And => {
                     self.advance();
-                    let t2 = self.expr();
-                    return Node::And {
-                        left: Box::new(term),
-                        right: Box::new(t2),
+                    result = Node::And {
+                        left: Box::new(result),
+                        right: Box::new(self.term()),
                     };
                 }
-                _ => (),
+                _ => break,
             }
         }
-        term
+        result
     }
     fn term(&mut self) -> Node {
         let token = match self.curr_token {
@@ -54,14 +51,20 @@ impl<'a> Parser<'a> {
             None => panic!("Invalid syntax, expected a term, got nothing"),
         };
         match token {
-            Token::Bool(val) => Node::Bool(*val),
+            Token::Bool(val) => {
+                self.advance();
+                Node::Bool(*val)
+            }
             Token::Lparen => {
                 self.advance();
                 let e = self.expr();
                 if let Some(token) = self.curr_token {
                     match token {
-                        Token::RParen => e,
-                        _ => panic!("Invalid syntax, expected ')', got '{}'", token)
+                        Token::RParen => {
+                            self.advance();
+                            e
+                        }
+                        _ => panic!("Invalid syntax, expected ')', got '{}'", token),
                     }
                 } else {
                     panic!("Invalid syntax, expected ')' got nothing");
