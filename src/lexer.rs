@@ -66,6 +66,12 @@ impl<'a> Lexer<'a> {
                     self.advance();
                     tokens.push(Token::Or);
                 }
+                'n' => {
+                    let rest = "ot";
+                    self.verify(&rest);
+                    self.advance();
+                    tokens.push(Token::Not);
+                }
                 _ => (),
             }
         }
@@ -101,14 +107,15 @@ mod tests {
 
     #[test]
     fn operators() {
-        test("and or", vec![Token::And, Token::Or]);
+        test("and or not", vec![Token::And, Token::Or, Token::Not]);
     }
 
     #[test]
     fn all() {
         test(
-            "true or (false and false)",
+            "not true or (false and false)",
             vec![
+                Token::Not,
                 Token::Bool(true),
                 Token::Or,
                 Token::Lparen,

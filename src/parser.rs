@@ -70,6 +70,10 @@ impl<'a> Parser<'a> {
                     panic!("Invalid syntax, expected ')' got nothing");
                 }
             }
+            Token::Not => {
+                self.advance();
+                Node::Not { child: Box::new(self.term()) }
+            }
             _ => panic!("Invalid syntax, expected a term, got '{}'", token),
         }
     }
@@ -109,9 +113,17 @@ mod tests {
     }
 
     #[test]
+    fn not() {
+        test("not true", false);
+        test("not false", true);
+    }
+
+    #[test]
     fn associativity() {
         test("true or true and false", false);
         test("false and false or true", true);
+        test("not true and false", false);
+        test("not false or true", true);
     }
 
     #[test]

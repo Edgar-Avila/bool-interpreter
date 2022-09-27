@@ -4,6 +4,7 @@ pub enum Node {
     Bool(bool),
     And { left: Box<Node>, right: Box<Node> },
     Or { left: Box<Node>, right: Box<Node> },
+    Not { child: Box<Node> },
 }
 
 impl Node {
@@ -12,6 +13,7 @@ impl Node {
             Self::Bool(val) => *val,
             Self::And { left, right } => left.eval() && right.eval(),
             Self::Or { left, right } => left.eval() || right.eval(),
+            Self::Not { child } => !child.eval(),
         }
     }
 }
@@ -22,6 +24,7 @@ impl Display for Node {
             Self::Bool(val) => write!(f, "{}", val),
             Self::And { left, right } => write!(f, "({} and {})", left, right),
             Self::Or { left, right } => write!(f, "({} or {})", left, right),
+            Self::Not { child } => write!(f, "(not {})", child),
         }
     }
 }

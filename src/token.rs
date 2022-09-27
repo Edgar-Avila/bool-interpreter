@@ -7,6 +7,7 @@ pub enum Token {
     Or,
     Lparen,
     RParen,
+    Not,
 }
 
 impl Display for Token {
@@ -17,6 +18,7 @@ impl Display for Token {
             Self::Or => write!(f, "or"),
             Self::Lparen => write!(f, "("),
             Self::RParen => write!(f, ")"),
+            Self::Not => write!(f, "not"),
         }
     }
 }
